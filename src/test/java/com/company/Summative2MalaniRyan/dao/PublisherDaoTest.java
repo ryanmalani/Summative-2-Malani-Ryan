@@ -3,6 +3,7 @@ package com.company.Summative2MalaniRyan.dao;
 import com.company.Summative2MalaniRyan.model.Author;
 import com.company.Summative2MalaniRyan.model.Book;
 import com.company.Summative2MalaniRyan.model.Publisher;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,21 +29,18 @@ public class PublisherDaoTest {
     @Before
     public void setUp() throws Exception {
 
+        removePublishers();
+    }
+
+    @After
+    public void tearDown() {
+
+        removePublishers();
+    }
+
+    private void removePublishers() {
+
         // empty out the test database
-
-        List<Author> authors = authorDao.getAllAuthors();
-        authors.stream()
-                .forEach(a ->
-                {
-                    authorDao.deleteAuthor(a.getAuthorId());
-                });
-
-        List<Book> books = bookDao.getAllBooks();
-        books.stream()
-                .forEach(b ->
-                {
-                    bookDao.deleteBook(b.getBookId());
-                });
 
         List<Publisher> publishers = publisherDao.getAllPublishers();
         publishers.stream()
@@ -55,6 +53,8 @@ public class PublisherDaoTest {
     @Test
     public void shouldAddGetDeletePublisher() {
 
+        // ARRANGE
+
         Publisher publisher = new Publisher();
         publisher.setName("TarcherPerigee");
         publisher.setStreet("1745 Broadway");
@@ -65,19 +65,29 @@ public class PublisherDaoTest {
         publisher.setEmail("penguinrandomhouse@penguinrandomhouse.com");
         publisherDao.addPublisher(publisher);
 
+        // ACT
+
         Publisher publisher2 = publisherDao.getPublisher(publisher.getPublisherId());
 
+        // ASSERT
+
         assertEquals(publisher2, publisher);
+
+        // ACT
 
         publisherDao.deletePublisher(publisher.getPublisherId());
 
         publisher2 = publisherDao.getPublisher(publisher.getPublisherId());
+
+        // ASSERT
 
         assertNull(publisher2);
     }
 
     @Test
     public void shouldGetAllPublishers() {
+
+        // ARRANGE
 
         Publisher publisher = new Publisher();
         publisher.setName("TarcherPerigee");
@@ -99,7 +109,11 @@ public class PublisherDaoTest {
         publisher.setEmail("editorial@pelicanpub.com");
         publisherDao.addPublisher(publisher);
 
+        // ACT
+
         List<Publisher> pList = publisherDao.getAllPublishers();
+
+        // ASSERT
 
         assertEquals(pList.size(), 2);
 
@@ -107,6 +121,8 @@ public class PublisherDaoTest {
 
     @Test
     public void shouldUpdatePublisher() {
+
+        // ARRANGE
 
         Publisher publisher = new Publisher();
         publisher.setName("TarcherPerigee");
@@ -127,7 +143,11 @@ public class PublisherDaoTest {
         publisher.setEmail("NEW EMAIL");
         publisherDao.updatePublisher(publisher);
 
+        // ACT
+
         Publisher publisher2 = publisherDao.getPublisher(publisher.getPublisherId());
+
+        // ASSERT
 
         assertEquals(publisher2, publisher);
     }

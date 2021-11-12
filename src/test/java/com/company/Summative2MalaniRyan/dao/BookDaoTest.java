@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.math.BigDecimal;
@@ -68,6 +67,7 @@ public class BookDaoTest {
     public void shouldAddGetDeleteBook() {
 
         // ARRANGE
+
         Author author = new Author();
         author.setFirstName("Napolean");
         author.setLastName("Hill");
@@ -98,19 +98,30 @@ public class BookDaoTest {
         book.setPrice(new BigDecimal("7.49"));
         book = bookDao.addBook(book);
 
+        // ACT
+
         Book book2 = bookDao.getBook(book.getBookId());
 
+        // ASSERT
+
         assertEquals(book2, book);
+
+        // ACT
 
         bookDao.deleteBook(book.getBookId());
 
         book2 = bookDao.getBook(book.getBookId());
+
+        // ASSERT
 
         assertNull(book2);
     }
 
     @Test
     public void shouldGetBookByAuthorId() {
+
+        // ARRANGE
+
         Author author = new Author();
         author.setFirstName("Napolean");
         author.setLastName("Hill");
@@ -141,9 +152,14 @@ public class BookDaoTest {
         book.setPrice(new BigDecimal("7.49"));
         book = bookDao.addBook(book);
 
+        // ACT
+
         List<Book> booksByAuthor = bookDao.getBooksByAuthor(author.getAuthorId());
 
         for(Book testBook : booksByAuthor) {
+
+            // ASSERT
+
             assertEquals(author.getAuthorId(), testBook.getAuthorId());
         }
     }
@@ -151,7 +167,8 @@ public class BookDaoTest {
     @Test
     public void shouldGetAllBooks() {
 
-        // Need to create a Publisher and an Author first
+        // ARRANGE
+
         Publisher publisher = new Publisher();
         publisher.setName("TarcherPerigee");
         publisher.setStreet("1745 Broadway");
@@ -193,13 +210,19 @@ public class BookDaoTest {
 
         book = bookDao.addBook(book);
 
+        // ACT
+
         List<Book> bList = bookDao.getAllBooks();
+
+        // ASSERT
 
         assertEquals(bList.size(), 2);
     }
 
     @Test
     public void shouldUpdateBook() {
+
+        // ARRANGE
 
         Author author = new Author();
         author.setFirstName("Napolean");
@@ -232,6 +255,8 @@ public class BookDaoTest {
 
         book = bookDao.addBook(book);
 
+        // ACT
+
         String newIsbn = "NEW ISBN";
 
         book.setIsbn(newIsbn);
@@ -239,6 +264,8 @@ public class BookDaoTest {
         bookDao.updateBook(book);
 
         Book book2 = bookDao.getBook(book.getBookId());
+
+        // ASSERT
 
         assertEquals(newIsbn, book2.getIsbn());
     }

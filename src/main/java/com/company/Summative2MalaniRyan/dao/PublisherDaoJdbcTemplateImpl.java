@@ -37,8 +37,12 @@ public class PublisherDaoJdbcTemplateImpl implements PublisherDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    // add publisher
+
     @Override
     public Publisher addPublisher(Publisher publisher) {
+
+        // update jdbcTemplate using INSERT prepared statement
 
         jdbcTemplate.update(INSERT_PUBLISHER_SQL,
                 publisher.getName(),
@@ -49,6 +53,8 @@ public class PublisherDaoJdbcTemplateImpl implements PublisherDao {
                 publisher.getPhone(),
                 publisher.getEmail());
 
+        // retrieve last inserted object id
+
         int id = jdbcTemplate.queryForObject("select LAST_INSERT_ID()", Integer.class);
 
         publisher.setPublisherId(id);
@@ -56,8 +62,12 @@ public class PublisherDaoJdbcTemplateImpl implements PublisherDao {
         return publisher;
     }
 
+    // return publisher by id
+
     @Override
     public Publisher getPublisher(int id) {
+
+        // try querying jdbcTemplate for publisher using prepared statement, rowMapper, and publisher id, return null if empty
 
         try {
             return jdbcTemplate.queryForObject(SELECT_PUBLISHER_SQL, this::mapRowToPublisher, id);
@@ -66,14 +76,22 @@ public class PublisherDaoJdbcTemplateImpl implements PublisherDao {
         }
     }
 
+    // return a list of all publishers
+
     @Override
     public List<Publisher> getAllPublishers() {
+
+        // query the jdbcTemplate for publishers using prepared statement and rowMapper
 
         return jdbcTemplate.query(SELECT_ALL_PUBLISHERS_SQL, this::mapRowToPublisher);
     }
 
+    // update publisher
+
     @Override
     public void updatePublisher(Publisher publisher) {
+
+        // use prepared statement to update properties of publisher in jdbcTemplate
 
         jdbcTemplate.update(UPDATE_PUBLISHER_SQL,
                 publisher.getName(),
@@ -86,9 +104,12 @@ public class PublisherDaoJdbcTemplateImpl implements PublisherDao {
                 publisher.getPublisherId());
     }
 
+    // delete publisher
 
     @Override
     public void deletePublisher(int id) {
+
+        // use prepared statement to remove a publisher from jdbcTemplate by id
 
         jdbcTemplate.update(DELETE_PUBLISHER_SQL, id);
     }
@@ -108,6 +129,5 @@ public class PublisherDaoJdbcTemplateImpl implements PublisherDao {
         publisher.setEmail(rs.getString("email"));
 
         return publisher;
-
     }
 }

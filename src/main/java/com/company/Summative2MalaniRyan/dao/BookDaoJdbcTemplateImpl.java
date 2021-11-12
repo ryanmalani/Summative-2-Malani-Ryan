@@ -40,8 +40,12 @@ public class BookDaoJdbcTemplateImpl implements BookDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    // add a book to the database
+
     @Override
     public Book addBook(Book book) {
+
+        // update jdbcTemplate using INSERT prepared statement
 
         jdbcTemplate.update(INSERT_BOOK_SQL,
                 book.getIsbn(),
@@ -51,6 +55,8 @@ public class BookDaoJdbcTemplateImpl implements BookDao {
                 book.getPublisherId(),
                 book.getPrice());
 
+        // retrieve last inserted object id
+
         int id = jdbcTemplate.queryForObject("select LAST_INSERT_ID()", Integer.class);
 
         book.setBookId(id);
@@ -58,8 +64,12 @@ public class BookDaoJdbcTemplateImpl implements BookDao {
         return book;
     }
 
+    // return a book from database by id
+
     @Override
     public Book getBook(int id) {
+
+        // try querying jdbcTemplate for book using prepared statement, rowMapper, and book id, return null if empty
 
         try {
             return jdbcTemplate.queryForObject(SELECT_BOOK_SQL, this::mapRowToBook, id);
@@ -68,19 +78,32 @@ public class BookDaoJdbcTemplateImpl implements BookDao {
         }
     }
 
+    // return a list of books by an author using author id
+
     @Override
     public List<Book> getBooksByAuthor(int authorId) {
+
+        // query the jdbcTemplate for books using rowMapper and author id
+
         return jdbcTemplate.query(SELECT_BOOKS_BY_AUTHOR_SQL, this::mapRowToBook, authorId);
     }
+
+    // return a list of all books
 
     @Override
     public List<Book> getAllBooks() {
 
+        // query the jdbcTemplate for books using prepared statement and rowMapper
+
         return jdbcTemplate.query(SELECT_ALL_BOOKS_SQL, this::mapRowToBook);
     }
 
+    // update a book
+
     @Override
     public void updateBook(Book book) {
+
+        // use prepared statement to update properties of book in jdbcTemplate
 
         jdbcTemplate.update(UPDATE_BOOK_SQL,
                 book.getIsbn(),
@@ -92,8 +115,12 @@ public class BookDaoJdbcTemplateImpl implements BookDao {
                 book.getBookId());
     }
 
+    // delete a book
+
     @Override
     public void deleteBook(int id) {
+
+        // use prepared statement to remove a book from jdbcTemplate by id
 
         jdbcTemplate.update(DELETE_BOOK_SQL, id);
     }

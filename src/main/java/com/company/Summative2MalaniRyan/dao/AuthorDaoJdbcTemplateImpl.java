@@ -37,8 +37,12 @@ public class AuthorDaoJdbcTemplateImpl implements AuthorDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    // add author
+
     @Override
     public Author addAuthor(Author author) {
+
+        // update jdbcTemplate using INSERT prepared statement
 
         jdbcTemplate.update(INSERT_AUTHOR_SQL,
                 author.getFirstName(),
@@ -50,6 +54,8 @@ public class AuthorDaoJdbcTemplateImpl implements AuthorDao {
                 author.getPhone(),
                 author.getEmail());
 
+        // retrieve last inserted object id
+
         int id = jdbcTemplate.queryForObject("select LAST_INSERT_ID()", Integer.class);
 
         author.setAuthorId(id);
@@ -58,8 +64,12 @@ public class AuthorDaoJdbcTemplateImpl implements AuthorDao {
 
     }
 
+    // return author by id
+
     @Override
     public Author getAuthor(int id) {
+
+        // try querying jdbcTemplate for author using prepared statement, rowMapper, and author id, return null if empty
 
         try {
             return jdbcTemplate.queryForObject(SELECT_AUTHOR_SQL, this::mapRowToAuthor, id);
@@ -68,14 +78,22 @@ public class AuthorDaoJdbcTemplateImpl implements AuthorDao {
         }
     }
 
+    // return a list of all authors
+
     @Override
     public List<Author> getAllAuthors() {
+
+        // query the jdbcTemplate for authors using prepared statement and rowMapper
 
         return jdbcTemplate.query(SELECT_ALL_AUTHORS_SQL, this::mapRowToAuthor);
     }
 
+    // update author
+
     @Override
     public void updateAuthor(Author author) {
+
+        // use prepared statement to update properties of author in jdbcTemplate
 
         jdbcTemplate.update(UPDATE_AUTHOR_SQL,
                 author.getFirstName(),
@@ -90,8 +108,13 @@ public class AuthorDaoJdbcTemplateImpl implements AuthorDao {
 
     }
 
+    // delete an author
+
     @Override
     public void deleteAuthor(int id) {
+
+        // use prepared statement to remove an author from jdbcTemplate by id
+
         jdbcTemplate.update(DELETE_AUTHOR_SQL, id);
     }
 

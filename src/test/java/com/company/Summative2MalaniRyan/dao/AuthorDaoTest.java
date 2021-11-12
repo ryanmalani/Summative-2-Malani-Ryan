@@ -1,9 +1,6 @@
 package com.company.Summative2MalaniRyan.dao;
 
-import com.company.Summative2MalaniRyan.Summative2MalaniRyanApplication;
 import com.company.Summative2MalaniRyan.model.Author;
-import com.company.Summative2MalaniRyan.model.Book;
-import com.company.Summative2MalaniRyan.model.Publisher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -53,6 +48,8 @@ public class AuthorDaoTest {
     @Test
     public void shouldAddGetDeleteAuthor() {
 
+        // ARRANGE
+
         Author author = new Author();
         author.setFirstName("Napolean");
         author.setLastName("Hill");
@@ -65,19 +62,29 @@ public class AuthorDaoTest {
 
         author = authorDao.addAuthor(author);
 
+        // ACT
+
         Author author2 = authorDao.getAuthor(author.getAuthorId());
 
+        // ASSERT
+
         assertEquals(author2, author);
+
+        // ACT
 
         authorDao.deleteAuthor(author.getAuthorId());
 
         author2 = authorDao.getAuthor(author.getAuthorId());
+
+        // ASSERT
 
         assertNull(author2);
     }
 
     @Test
     public void shouldGetAllAuthors() {
+
+        // ARRANGE
 
         Author author = new Author();
         author.setFirstName("Napolean");
@@ -103,13 +110,20 @@ public class AuthorDaoTest {
 
         author = authorDao.addAuthor(author);
 
+        // ACT
+
         List<Author> aList = authorDao.getAllAuthors();
+
+        // ASSERT
+
         assertEquals(aList.size(), 2);
 
     }
 
     @Test
     public void shouldUpdateAuthor() {
+
+        // ARRANGE
 
         Author author = new Author();
         author.setFirstName("Napolean");
@@ -134,7 +148,11 @@ public class AuthorDaoTest {
 
         authorDao.updateAuthor(author);
 
+        // ACT
+
         Author author2 = authorDao.getAuthor(author.getAuthorId());
+
+        // ASSERT
 
         assertEquals(author2, author);
     }
